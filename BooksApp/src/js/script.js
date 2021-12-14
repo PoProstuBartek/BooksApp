@@ -48,9 +48,6 @@
   
   const initActions = function(){
     const thisBookList = this;
-    // const booksList = document.querySelector(select.containerOf.bookList);
-    // const bookImages = booksList.querySelectorAll(select.containerOf.image);
-    
   
     thisBookList.addEventListener('dblclick', function(event){
       event.preventDefault();
@@ -76,13 +73,11 @@
           const valueIndexof = filters.indexOf(clickedElem.value);
           filters.splice(valueIndexof, 1);
         }
-        console.log(filters);
         filter();
       }
     });
 
     const filter = function(){
-      console.log('WYWOŁANO MNIE');
       for(let book of dataSource.books){
         const filteredBook  = document.querySelector('.book__image[data-id="' + book.id + '"]');
         let shouldBeHidden = false;
