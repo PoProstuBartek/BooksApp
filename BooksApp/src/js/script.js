@@ -18,19 +18,18 @@
     booklist: Handlebars.compile(document.querySelector(select.templateOf.book).innerHTML),
   };
 
-  const favoriteBooks = [];
-  const filters = [];
-
   class BooksList {
     constructor() {
       const thisBooksList = this;
 
+      thisBooksList.getElements();
       thisBooksList.render();
       thisBooksList.initActions();
     }
   
     initData() {
-      this.data = dataSource.books;
+      const thisBooksList = this;
+      thisBooksList.data = dataSource.books;
     }
   
     getElements() {
@@ -38,6 +37,8 @@
 
       thisBooksList.dom = {};
       
+      thisBooksList.dom.bookList = document.querySelector(select.containerOf.bookList);
+      thisBooksList.dom.filterBooks = document.querySelector(select.containerOf.filters);
     }
 
     render(){
@@ -59,38 +60,40 @@
         const generatedHTML = templates.booklist(bookData);
         thisBooksList.element = utils.createDOMFromHTML(generatedHTML);
         
-        const listContainer = document.querySelector(select.containerOf.bookList);
-        listContainer.appendChild(thisBooksList.element);
+        //const listContainer = document.querySelector(select.containerOf.bookList);
+        thisBooksList.dom.bookList.appendChild(thisBooksList.element);
       }
     }
   
     initActions() {
       const thisBooksList = this;
+      thisBooksList.favoriteBooks = [];
+      thisBooksList.filters = [];
   
-      thisBooksList.element = document.querySelector(select.containerOf.bookList);
-      thisBooksList.element.addEventListener('dblclick', function(event){
+      // thisBooksList.element = document.querySelector(select.containerOf.bookList);
+      thisBooksList.dom.bookList.addEventListener('dblclick', function(event){
         event.preventDefault();
         const image = event.target.offsetParent;
         const bookId = image.getAttribute('data-id');
   
-        favoriteBooks.push(bookId);
+        thisBooksList.favoriteBooks.push(bookId);
   
-        if(favoriteBooks.includes(bookId)){
+        if(thisBooksList.favoriteBooks.includes(bookId)){
           image.classList.toggle('favorite');
         }   
       });
   
-      const filterBooks = document.querySelector(select.containerOf.filters);
-      filterBooks.addEventListener('click', function(event){
+      //const filterBooks = document.querySelector(select.containerOf.filters);
+      thisBooksList.dom.filterBooks.addEventListener('click', function(event){
         
         const clickedElem = event.target;
   
         if(clickedElem.tagName === 'INPUT' && clickedElem.type === 'checkbox' && clickedElem.name === 'filter'){
-          if(clickedElem.checked === true){
-            filters.push(clickedElem.value);
+          if(clickedElem.checked){
+            thisBooksList.filters.push(clickedElem.value);
           } else {
-            const valueIndexof = filters.indexOf(clickedElem.value);
-            filters.splice(valueIndexof, 1);
+            const valueIndexof = thisBooksList.filters.indexOf(clickedElem.value);
+            thisBooksList.filters.splice(valueIndexof, 1);
           }
           thisBooksList.filter();
         }
@@ -98,17 +101,18 @@
     }
 
     filter(){ 
+      const thisBooksList = this;
       for(let book of dataSource.books){
         const filteredBook  = document.querySelector('.book__image[data-id="' + book.id + '"]');
         let shouldBeHidden = false;
 
-        for(let filter of filters){
+        for(let filter of thisBooksList.filters){
           if(!book.details[filter]){
             shouldBeHidden = true;
             break;
           }
         }
-        if(shouldBeHidden === true){
+        if(shouldBeHidden){
           filteredBook.classList.add('hidden');
         } else {
           filteredBook.classList.remove('hidden');
@@ -121,11 +125,11 @@
       if(rating < 6){
         background = 'linear-gradient(to bottom,  #fefcea 0%, #f1da36 100%);';
       } else if(rating > 6 && rating <= 8) {
-        background = 'background: linear-gradient(to bottom, #b4df5b 0%,#b4df5b 100%);';
+        background = 'linear-gradient(to bottom, #b4df5b 0%,#b4df5b 100%);';
       } else if(rating > 8 && rating <= 9){
-        background = 'background: linear-gradient(to bottom, #299a0b 0%, #299a0b 100%);';
+        background = 'linear-gradient(to bottom, #299a0b 0%, #299a0b 100%);';
       } else if(rating > 9){
-        background = 'background: linear-gradient(to bottom, #ff0084 0%,#ff0084 100%);';
+        background = 'linear-gradient(to bottom, #ff0084 0%,#ff0084 100%);';
       }
       return background;
     }
