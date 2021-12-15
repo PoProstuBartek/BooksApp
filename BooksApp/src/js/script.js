@@ -59,8 +59,7 @@
   
         const generatedHTML = templates.booklist(bookData);
         thisBooksList.element = utils.createDOMFromHTML(generatedHTML);
-        
-        //const listContainer = document.querySelector(select.containerOf.bookList);
+
         thisBooksList.dom.bookList.appendChild(thisBooksList.element);
       }
     }
@@ -70,7 +69,6 @@
       thisBooksList.favoriteBooks = [];
       thisBooksList.filters = [];
   
-      // thisBooksList.element = document.querySelector(select.containerOf.bookList);
       thisBooksList.dom.bookList.addEventListener('dblclick', function(event){
         event.preventDefault();
         const image = event.target.offsetParent;
@@ -83,7 +81,6 @@
         }   
       });
   
-      //const filterBooks = document.querySelector(select.containerOf.filters);
       thisBooksList.dom.filterBooks.addEventListener('click', function(event){
         
         const clickedElem = event.target;
